@@ -5,71 +5,241 @@
   <title>PZ World Coordinate Converter</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; background: #111; color: #eee; }
-    label { display: block; margin-top: 10px; }
-    input[type="number"] { width: 150px; padding: 4px; margin-top: 4px; }
-    button { margin-top: 15px; padding: 6px 12px; cursor: pointer; }
-    .result { margin-top: 20px; padding: 10px; background: #222; border-radius: 4px; }
-    code { background: #000; padding: 2px 4px; border-radius: 3px; }
+    h1 { font-size: 1.2em; color: #aaa; margin-bottom: 4px; }
+    h2 { font-size: 1em; color: #888; margin: 0 0 12px 0; font-weight: normal; border-bottom: 1px solid #333; padding-bottom: 8px; }
+    .section { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 6px; padding: 16px; margin-bottom: 20px; }
+    label { display: block; margin-top: 10px; font-size: 0.9em; color: #bbb; }
+    input[type="number"] { width: 150px; padding: 4px; margin-top: 4px; background: #222; border: 1px solid #444; color: #eee; border-radius: 3px; }
+    .input-row { display: flex; gap: 20px; flex-wrap: wrap; }
+    button.convert-btn { margin-top: 15px; padding: 6px 14px; cursor: pointer; background: #2a5a2a; color: #eee; border: 1px solid #3a8a3a; border-radius: 4px; }
+    button.convert-btn:hover { background: #336633; }
+    .result { margin-top: 14px; padding: 10px; background: #222; border-radius: 4px; font-size: 0.9em; }
+    .result-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-bottom: 10px; }
+    .result-item { background: #2a2a2a; padding: 6px 10px; border-radius: 3px; }
+    .result-item strong { display: block; color: #888; font-size: 0.8em; margin-bottom: 2px; }
+    .result-item span { font-size: 1.05em; }
+    code { background: #000; padding: 2px 6px; border-radius: 3px; font-size: 0.85em; word-break: break-all; }
+    .copy-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+    button.copy-btn { padding: 4px 10px; cursor: pointer; background: #1a3a5a; color: #eee; border: 1px solid #2a5a8a; border-radius: 4px; font-size: 0.85em; white-space: nowrap; }
+    button.copy-btn:hover { background: #1e4a72; }
+
+    /* Quick parse bar */
+    .parse-bar { background: #141a1f; border: 1px solid #1e3a50; border-radius: 6px; padding: 14px 16px; margin-bottom: 20px; display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+    .parse-bar label { margin: 0; font-size: 0.85em; color: #6a9fc0; }
+    .parse-bar input[type="text"] { padding: 5px 8px; margin-top: 4px; background: #1a2530; border: 1px solid #2a5a7a; color: #eee; border-radius: 3px; width: 160px; font-size: 0.95em; letter-spacing: 0.05em; }
+    .parse-bar input[type="text"]::placeholder { color: #446; }
+    button.parse-btn { padding: 6px 14px; cursor: pointer; background: #1a3a5a; color: #eee; border: 1px solid #2a6a9a; border-radius: 4px; white-space: nowrap; }
+    button.parse-btn:hover { background: #1e4a72; }
+    .parse-hint { font-size: 0.78em; color: #446; margin-top: 2px; }
+
+    /* Toast notification */
+    #toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #2a6a2a;
+      color: #eee;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.9em;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 999;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   </style>
 </head>
 <body>
-  <h1>PZ Absolute → worldX/worldY/posX/posY</h1>
 
-  <label>
-    Absolute X (tileX):
-    <input id="absX" type="number" step="1" />
-  </label>
+  <div id="toast">Copied to Clipboard</div>
 
-  <label>
-    Absolute Y (tileY):
-    <input id="absY" type="number" step="1" />
-  </label>
+  <!-- QUICK PARSE BAR -->
+  <div class="parse-bar">
+    <div>
+      <label>Quick Parse -- paste coords in <code style="background:#0a1520;color:#6ab;">8743x1231</code> format:</label>
+      <div class="parse-hint">Formats: 8743x1231 &nbsp;|&nbsp; 8743,1231 &nbsp;|&nbsp; 1811 - 13441 - 0</div>
+    </div>
+    <div>
+      <label>Coords:
+        <input type="text" id="quickParse" placeholder="e.g. 8743x1231 or 1811 - 13441 - 0" oninput="tryQuickParse()" />
+      </label>
+    </div>
+  </div>
 
-  <button onclick="convert()">Convert</button>
+  <!-- SECTION 1: Absolute -> World -->
+  <div class="section">
+    <h1>Absolute -> World Coords</h1>
+    <h2>Convert absolute tile coords to worldX / worldY / posX / posY</h2>
+    <div class="input-row">
+      <label>Absolute X (tileX):<input id="absX" type="number" step="1" /></label>
+      <label>Absolute Y (tileY):<input id="absY" type="number" step="1" /></label>
+    </div>
+    <button class="convert-btn" onclick="convertToWorld()">Convert</button>
+    <div class="result" id="result1" style="display:none;"></div>
+  </div>
 
-  <div class="result" id="result" style="display:none;"></div>
+  <!-- QUICK PARSE BAR 2 -->
+  <div class="parse-bar">
+    <div>
+      <label>Quick Parse -- paste coords in <code style="background:#0a1520;color:#6ab;">worldX=29, worldY=4, posX=43, posY=31</code> format:</label>
+      <div class="parse-hint">Populates world coord fields below automatically (posZ optional, defaults to 0)</div>
+    </div>
+    <div>
+      <label>Coords:
+        <input type="text" id="quickParseWorld" placeholder="e.g. worldX=29, worldY=4, posX=43, posY=31, posZ=0" style="width:320px;" oninput="tryQuickParseWorld()" />
+      </label>
+    </div>
+  </div>
+
+  <!-- SECTION 2: World -> Absolute -->
+  <div class="section">
+    <h1>World Coords -> Absolute</h1>
+    <h2>Convert worldX / worldY / posX / posY back to absolute tile coords</h2>
+    <div class="input-row">
+      <label>worldX:<input id="wX" type="number" step="1" /></label>
+      <label>worldY:<input id="wY" type="number" step="1" /></label>
+      <label>posX:<input id="pX" type="number" step="1" /></label>
+      <label>posY:<input id="pY" type="number" step="1" /></label>
+      <label>posZ (floor):<input id="pZ" type="number" step="1" value="0" /></label>
+    </div>
+    <button class="convert-btn" onclick="convertToAbsolute()">Convert</button>
+    <div class="result" id="result2" style="display:none;"></div>
+  </div>
 
   <script>
-    let lastFormatted = "";
+    const CELL_SIZE = 300;
 
-    function convert() {
+    function tryQuickParse() {
+      const raw = document.getElementById('quickParse').value.trim();
+      // Match formats:
+      //   8743x1231
+      //   8743 x 1231
+      //   8743,1231
+      //   8743 1231
+      //   1811 - 13441 - 0   (PZ debug format, z optional)
+      //   1811 - 13441
+      const dashMatch = raw.match(/^(\d+)\s*-\s*(\d+)(?:\s*-\s*(\d+))?$/);
+      if (dashMatch) {
+        document.getElementById('absX').value = dashMatch[1];
+        document.getElementById('absY').value = dashMatch[2];
+        convertToWorld();
+        return;
+      }
+      const match = raw.match(/^(\d+)\s*[x,\s]\s*(\d+)$/i);
+      if (match) {
+        document.getElementById('absX').value = match[1];
+        document.getElementById('absY').value = match[2];
+        convertToWorld();
+      }
+    }
+
+    function tryQuickParseWorld() {
+      const raw = document.getElementById('quickParseWorld').value.trim();
+
+      function extractVal(key) {
+        var re = new RegExp(key + '\\s*=\\s*(-?\\d+)', 'i');
+        var m = raw.match(re);
+        return m ? parseInt(m[1], 10) : null;
+      }
+
+      var wX = extractVal('worldX');
+      var wY = extractVal('worldY');
+      var pX = extractVal('posX');
+      var pY = extractVal('posY');
+      var pZ = extractVal('posZ');
+
+      if (wX !== null && wY !== null && pX !== null && pY !== null) {
+        document.getElementById('wX').value = wX;
+        document.getElementById('wY').value = wY;
+        document.getElementById('pX').value = pX;
+        document.getElementById('pY').value = pY;
+        document.getElementById('pZ').value = pZ !== null ? pZ : 0;
+        convertToAbsolute();
+      }
+    }
+
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(showToast);
+    }
+
+    function convertToWorld() {
       const tileX = parseInt(document.getElementById('absX').value, 10);
       const tileY = parseInt(document.getElementById('absY').value, 10);
 
       if (isNaN(tileX) || isNaN(tileY)) {
-        alert('Please enter valid numbers for Absolute X and Absolute Y.');
+        document.getElementById('result1').style.display = 'block';
+        document.getElementById('result1').innerHTML = '<span style="color:#f88">Please enter valid numbers.</span>';
         return;
       }
 
-      const CELL_SIZE = 300;
-
       const worldX = Math.floor(tileX / CELL_SIZE);
       const worldY = Math.floor(tileY / CELL_SIZE);
-
       const posX = tileX - worldX * CELL_SIZE;
       const posY = tileY - worldY * CELL_SIZE;
 
-      lastFormatted = `worldX=${worldX}, worldY=${worldY}, posX=${posX}, posY=${posY},`;
+      const formatted = `worldX=${worldX}, worldY=${worldY}, posX=${posX}, posY=${posY},`;
 
-      const resultDiv = document.getElementById('result');
-      resultDiv.style.display = 'block';
-      resultDiv.innerHTML = `
-        <div><strong>worldX:</strong> ${worldX}</div>
-        <div><strong>worldY:</strong> ${worldY}</div>
-        <div><strong>posX:</strong> ${posX}</div>
-        <div><strong>posY:</strong> ${posY}</div>
-        <div style="margin-top:8px;">
-          <strong>spawnpoints.lua format:</strong><br>
-          <code id="spawnLine">${lastFormatted}</code>
+      const div = document.getElementById('result1');
+      div.style.display = 'block';
+      div.innerHTML = `
+        <div class="result-grid">
+          <div class="result-item"><strong>worldX</strong><span>${worldX}</span></div>
+          <div class="result-item"><strong>worldY</strong><span>${worldY}</span></div>
+          <div class="result-item"><strong>posX</strong><span>${posX}</span></div>
+          <div class="result-item"><strong>posY</strong><span>${posY}</span></div>
         </div>
-        <button onclick="copySpawn()">Copy to Clipboard</button>
+        <strong style="font-size:0.85em;color:#888;">spawnpoints.lua format:</strong>
+        <div class="copy-row">
+          <code>${formatted}</code>
+          <button class="copy-btn" onclick="copyText('${formatted}')">Copy</button>
+        </div>
       `;
     }
 
-    function copySpawn() {
-      navigator.clipboard.writeText(lastFormatted).then(() => {
-        alert("Copied!");
-      });
+    function convertToAbsolute() {
+      const worldX = parseInt(document.getElementById('wX').value, 10);
+      const worldY = parseInt(document.getElementById('wY').value, 10);
+      const posX   = parseInt(document.getElementById('pX').value, 10);
+      const posY   = parseInt(document.getElementById('pY').value, 10);
+      const posZ   = parseInt(document.getElementById('pZ').value, 10);
+
+      if ([worldX, worldY, posX, posY, posZ].some(isNaN)) {
+        document.getElementById('result2').style.display = 'block';
+        document.getElementById('result2').innerHTML = '<span style="color:#f88">Please enter valid numbers for all fields.</span>';
+        return;
+      }
+
+      const tileX = worldX * CELL_SIZE + posX;
+      const tileY = worldY * CELL_SIZE + posY;
+
+      const formatted = `x=${tileX}, y=${tileY}, z=${posZ},`;
+
+      const div = document.getElementById('result2');
+      div.style.display = 'block';
+      div.innerHTML = `
+        <div class="result-grid">
+          <div class="result-item"><strong>Absolute X (tileX)</strong><span>${tileX}</span></div>
+          <div class="result-item"><strong>Absolute Y (tileY)</strong><span>${tileY}</span></div>
+          <div class="result-item"><strong>Z (floor)</strong><span>${posZ}</span></div>
+        </div>
+        <strong style="font-size:0.85em;color:#888;">Absolute format:</strong>
+        <div class="copy-row">
+          <code>${formatted}</code>
+          <button class="copy-btn" onclick="copyText('${formatted}')">Copy</button>
+        </div>
+      `;
     }
   </script>
 </body>
