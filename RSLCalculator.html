@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PZ World Coordinate Converter</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #111; color: #eee; }
+    label { display: block; margin-top: 10px; }
+    input[type="number"] { width: 150px; padding: 4px; margin-top: 4px; }
+    button { margin-top: 15px; padding: 6px 12px; cursor: pointer; }
+    .result { margin-top: 20px; padding: 10px; background: #222; border-radius: 4px; }
+    code { background: #000; padding: 2px 4px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>PZ Absolute → worldX/worldY/posX/posY</h1>
+
+  <label>
+    Absolute X (tileX):
+    <input id="absX" type="number" step="1" />
+  </label>
+
+  <label>
+    Absolute Y (tileY):
+    <input id="absY" type="number" step="1" />
+  </label>
+
+  <button onclick="convert()">Convert</button>
+
+  <div class="result" id="result" style="display:none;"></div>
+
+  <script>
+    let lastFormatted = "";
+
+    function convert() {
+      const tileX = parseInt(document.getElementById('absX').value, 10);
+      const tileY = parseInt(document.getElementById('absY').value, 10);
+
+      if (isNaN(tileX) || isNaN(tileY)) {
+        alert('Please enter valid numbers for Absolute X and Absolute Y.');
+        return;
+      }
+
+      const CELL_SIZE = 300;
+
+      const worldX = Math.floor(tileX / CELL_SIZE);
+      const worldY = Math.floor(tileY / CELL_SIZE);
+
+      const posX = tileX - worldX * CELL_SIZE;
+      const posY = tileY - worldY * CELL_SIZE;
+
+      lastFormatted = `worldX=${worldX}, worldY=${worldY}, posX=${posX}, posY=${posY},`;
+
+      const resultDiv = document.getElementById('result');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = `
+        <div><strong>worldX:</strong> ${worldX}</div>
+        <div><strong>worldY:</strong> ${worldY}</div>
+        <div><strong>posX:</strong> ${posX}</div>
+        <div><strong>posY:</strong> ${posY}</div>
+        <div style="margin-top:8px;">
+          <strong>spawnpoints.lua format:</strong><br>
+          <code id="spawnLine">${lastFormatted}</code>
+        </div>
+        <button onclick="copySpawn()">Copy to Clipboard</button>
+      `;
+    }
+
+    function copySpawn() {
+      navigator.clipboard.writeText(lastFormatted).then(() => {
+        alert("Copied!");
+      });
+    }
+  </script>
+</body>
+</html>
