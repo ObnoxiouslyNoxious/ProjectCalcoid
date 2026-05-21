@@ -78,6 +78,7 @@
     <div class="input-row">
       <label>Absolute X (tileX):<input id="absX" type="number" step="1" /></label>
       <label>Absolute Y (tileY):<input id="absY" type="number" step="1" /></label>
+      <label>Z / Floor (optional):<input id="absZ" type="number" step="1" placeholder="0" /></label>
     </div>
     <button class="convert-btn" onclick="convertToWorld()">Convert</button>
     <div class="result" id="result1" style="display:none;"></div>
@@ -127,6 +128,7 @@
       if (dashMatch) {
         document.getElementById('absX').value = dashMatch[1];
         document.getElementById('absY').value = dashMatch[2];
+        document.getElementById('absZ').value = dashMatch[3] !== undefined ? dashMatch[3] : '';
         convertToWorld();
         return;
       }
@@ -134,6 +136,7 @@
       if (match) {
         document.getElementById('absX').value = match[1];
         document.getElementById('absY').value = match[2];
+        document.getElementById('absZ').value = '';
         convertToWorld();
       }
     }
@@ -177,6 +180,9 @@
     function convertToWorld() {
       const tileX = parseInt(document.getElementById('absX').value, 10);
       const tileY = parseInt(document.getElementById('absY').value, 10);
+      const absZRaw = document.getElementById('absZ').value.trim();
+      const hasZ = absZRaw !== '' && !isNaN(parseInt(absZRaw, 10));
+      const posZ = hasZ ? parseInt(absZRaw, 10) : 0;
 
       if (isNaN(tileX) || isNaN(tileY)) {
         document.getElementById('result1').style.display = 'block';
@@ -189,7 +195,8 @@
       const posX = tileX - worldX * CELL_SIZE;
       const posY = tileY - worldY * CELL_SIZE;
 
-      const formatted = `worldX=${worldX}, worldY=${worldY}, posX=${posX}, posY=${posY},`;
+      const pzStr = hasZ && posZ !== 0 ? `, posZ=${posZ}` : '';
+      const formatted = `{ worldX=${worldX}, worldY=${worldY}, posX=${posX}, posY=${posY}${pzStr} },`;
 
       const div = document.getElementById('result1');
       div.style.display = 'block';
@@ -199,6 +206,7 @@
           <div class="result-item"><strong>worldY</strong><span>${worldY}</span></div>
           <div class="result-item"><strong>posX</strong><span>${posX}</span></div>
           <div class="result-item"><strong>posY</strong><span>${posY}</span></div>
+          <div class="result-item"><strong>posZ</strong><span>${hasZ ? posZ : '(not set)'}</span></div>
         </div>
         <strong style="font-size:0.85em;color:#888;">spawnpoints.lua format:</strong>
         <div class="copy-row">
