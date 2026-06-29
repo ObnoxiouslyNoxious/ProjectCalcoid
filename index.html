@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>PZ World Coordinate Converter</title>
+  <title>Project Calcoid</title>
+  <link rel="icon" href="img/calc.png" type="image/png">
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; background: #111; color: #eee; }
     h1 { font-size: 1.2em; color: #aaa; margin-bottom: 4px; }
@@ -52,10 +53,27 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
+    .home-link {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+    }
+    .home-link img {
+      width: 40px;
+      height: 40px;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+    }
+    .home-link:hover img {
+      opacity: 0.8;
+    }
   </style>
 </head>
 <body>
 
+  <a href="https://obnoxiouslynoxious.github.io/" class="home-link">
+    <img src="img/obnox.png" alt="Obnoxiously Noxious">
+  </a>
   <div id="toast">Copied to Clipboard</div>
 
   <!-- QUICK PARSE BAR -->
