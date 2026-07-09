@@ -24,7 +24,6 @@
     button.copy-btn { padding: 4px 10px; cursor: pointer; background: #1a3a5a; color: #eee; border: 1px solid #2a5a8a; border-radius: 4px; font-size: 0.85em; white-space: nowrap; }
     button.copy-btn:hover { background: #1e4a72; }
 
-    /* Quick parse bar */
     .parse-bar { background: #141a1f; border: 1px solid #1e3a50; border-radius: 6px; padding: 14px 16px; margin-bottom: 20px; display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
     .parse-bar label { margin: 0; font-size: 0.85em; color: #6a9fc0; }
     .parse-bar input[type="text"] { padding: 5px 8px; margin-top: 4px; background: #1a2530; border: 1px solid #2a5a7a; color: #eee; border-radius: 3px; width: 160px; font-size: 0.95em; letter-spacing: 0.05em; }
@@ -33,7 +32,6 @@
     button.parse-btn:hover { background: #1e4a72; }
     .parse-hint { font-size: 0.78em; color: #446; margin-top: 2px; }
 
-    /* Toast notification */
     #toast {
       position: fixed;
       bottom: 30px;
@@ -76,7 +74,6 @@
   </a>
   <div id="toast">Copied to Clipboard</div>
 
-  <!-- QUICK PARSE BAR -->
   <div class="parse-bar">
     <div>
       <label>Quick Parse -- paste coords in <code style="background:#0a1520;color:#6ab;">8743x1231</code> format:</label>
@@ -89,7 +86,6 @@
     </div>
   </div>
 
-  <!-- SECTION 1: Absolute -> World -->
   <div class="section">
     <h1>Absolute -> World Coords</h1>
     <h2>Convert absolute tile coords to worldX / worldY / posX / posY</h2>
@@ -102,7 +98,6 @@
     <div class="result" id="result1" style="display:none;"></div>
   </div>
 
-  <!-- QUICK PARSE BAR 2 -->
   <div class="parse-bar">
     <div>
       <label>Quick Parse -- paste coords in <code style="background:#0a1520;color:#6ab;">worldX=29, worldY=4, posX=43, posY=31</code> format:</label>
@@ -115,7 +110,6 @@
     </div>
   </div>
 
-  <!-- SECTION 2: World -> Absolute -->
   <div class="section">
     <h1>World Coords -> Absolute</h1>
     <h2>Convert worldX / worldY / posX / posY back to absolute tile coords</h2>
@@ -135,13 +129,6 @@
 
     function tryQuickParse() {
       const raw = document.getElementById('quickParse').value.trim();
-      // Match formats:
-      //   8743x1231
-      //   8743 x 1231
-      //   8743,1231
-      //   8743 1231
-      //   1811 - 13441 - 0   (PZ debug format, z optional)
-      //   1811 - 13441
       const dashMatch = raw.match(/^(\d+)\s*-\s*(\d+)(?:\s*-\s*(\d+))?$/);
       if (dashMatch) {
         document.getElementById('absX').value = dashMatch[1];
