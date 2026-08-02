@@ -21,16 +21,16 @@
     .result-item span { font-size: 1.05em; }
     code { background: #000; padding: 2px 6px; border-radius: 3px; font-size: 0.85em; word-break: break-all; }
     .copy-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
-    button.copy-btn { padding: 4px 10px; cursor: pointer; background: #1a3a5a; color: #eee; border: 1px solid #2a5a8a; border-radius: 4px; font-size: 0.85em; white-space: nowrap; }
-    button.copy-btn:hover { background: #1e4a72; }
+    button.copy-btn { padding: 4px 10px; cursor: pointer; background: #2a2a2a; color: #eee; border: 1px solid #444; border-radius: 4px; font-size: 0.85em; white-space: nowrap; }
+    button.copy-btn:hover { background: #333; }
 
-    .parse-bar { background: #141a1f; border: 1px solid #1e3a50; border-radius: 6px; padding: 14px 16px; margin-bottom: 20px; display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
-    .parse-bar label { margin: 0; font-size: 0.85em; color: #6a9fc0; }
-    .parse-bar input[type="text"] { padding: 5px 8px; margin-top: 4px; background: #1a2530; border: 1px solid #2a5a7a; color: #eee; border-radius: 3px; width: 160px; font-size: 0.95em; letter-spacing: 0.05em; }
-    .parse-bar input[type="text"]::placeholder { color: #446; }
-    button.parse-btn { padding: 6px 14px; cursor: pointer; background: #1a3a5a; color: #eee; border: 1px solid #2a6a9a; border-radius: 4px; white-space: nowrap; }
-    button.parse-btn:hover { background: #1e4a72; }
-    .parse-hint { font-size: 0.78em; color: #446; margin-top: 2px; }
+    .parse-bar { background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 14px 16px; margin-bottom: 20px; display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+    .parse-bar label { margin: 0; font-size: 0.85em; color: #888; }
+    .parse-bar input[type="text"] { padding: 5px 8px; margin-top: 4px; background: #222; border: 1px solid #444; color: #eee; border-radius: 3px; width: 160px; font-size: 0.95em; letter-spacing: 0.05em; }
+    .parse-bar input[type="text"]::placeholder { color: #555; }
+    button.parse-btn { padding: 6px 14px; cursor: pointer; background: #2a2a2a; color: #eee; border: 1px solid #444; border-radius: 4px; white-space: nowrap; }
+    button.parse-btn:hover { background: #333; }
+    .parse-hint { font-size: 0.78em; color: #555; margin-top: 2px; }
 
     #toast {
       position: fixed;
@@ -53,8 +53,8 @@
     }
     .home-link {
       position: fixed;
-      top: 12px;
-      right: 12px;
+      top: 30px;
+      right: 30px;
     }
     .home-link img {
       width: 40px;
@@ -76,7 +76,7 @@
 
   <div class="parse-bar">
     <div>
-      <label>Quick Parse -- paste coords in <code style="background:#0a1520;color:#6ab;">8743x1231</code> format:</label>
+      <label>Quick Parse -- paste coords in <code style="background:#0a0a0a;color:#aaa;">8743x1231</code> format:</label>
       <div class="parse-hint">Formats: 8743x1231 &nbsp;|&nbsp; 8743,1231 &nbsp;|&nbsp; 1811 - 13441 - 0</div>
     </div>
     <div>
@@ -100,7 +100,7 @@
 
   <div class="parse-bar">
     <div>
-      <label>Quick Parse -- paste coords in <code style="background:#0a1520;color:#6ab;">worldX=29, worldY=4, posX=43, posY=31</code> format:</label>
+      <label>Quick Parse -- paste coords in <code style="background:#0a0a0a;color:#aaa;">worldX=29, worldY=4, posX=43, posY=31</code> format:</label>
       <div class="parse-hint">Populates world coord fields below automatically (posZ optional, defaults to 0)</div>
     </div>
     <div>
