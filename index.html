@@ -81,7 +81,7 @@
     </div>
     <div style="margin-left: 100px;">
       <label>Coords:
-        <input type="text" id="quickParse" placeholder="e.g. 8743x1231 or 1811 - 13441 - 0" oninput="tryQuickParse()" />
+        <input type="text" id="quickParse" placeholder="E.G. 8743x1231 OR 1811 - 13441 - 0" oninput="tryQuickParse()" />
       </label>
     </div>
   </div>
@@ -105,7 +105,7 @@
     </div>
     <div style="margin-left: 100px;">
       <label>Coords:
-        <input type="text" id="quickParseWorld" placeholder="e.g. worldX=29, worldY=4, posX=43, posY=31, posZ=0" style="width:320px;" oninput="tryQuickParseWorld()" />
+        <input type="text" id="quickParseWorld" placeholder="E.G. WorldX=29, WorldY=4, PosX=43, PosY=31, PosZ=0" style="width:320px;" oninput="tryQuickParseWorld()" />
       </label>
     </div>
   </div>
@@ -114,11 +114,11 @@
     <h1>World Coords -> Absolute</h1>
     <h2>Convert WorldX / WorldY / PosX / PosY to Absolute Tile Coords</h2>
     <div class="input-row">
-      <label>worldX:<input id="wX" type="number" step="1" /></label>
-      <label>worldY:<input id="wY" type="number" step="1" /></label>
-      <label>posX:<input id="pX" type="number" step="1" /></label>
-      <label>posY:<input id="pY" type="number" step="1" /></label>
-      <label>posZ (floor):<input id="pZ" type="number" step="1" value="0" /></label>
+      <label>WorldX:<input id="wX" type="number" step="1" /></label>
+      <label>WorldY:<input id="wY" type="number" step="1" /></label>
+      <label>PosX:<input id="pX" type="number" step="1" /></label>
+      <label>PosY:<input id="pY" type="number" step="1" /></label>
+      <label>PosZ (floor):<input id="pZ" type="number" step="1" value="0" /></label>
     </div>
     <button class="convert-btn" onclick="convertToAbsolute()">Convert</button>
     <div class="result" id="result2" style="display:none;"></div>
